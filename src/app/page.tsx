@@ -18,7 +18,7 @@ export default function HomePage() {
 				<div className="text-[16px] italic">Minecraft Bedrock is just gone at this point.</div>
 				<div className="text-[10px] italic text-[#959595]">Some time ago...</div>
 			</div>
-			<div className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px] h-[10000px]">
+			<div className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
 				<div className="text-[24px]"><a className="italic font-bold">e</a>'s brain said...</div>
 				<div className="text-[16px] italic">e</div>
 				<div className="text-[10px] italic text-[#959595]">Some time ago...</div>
