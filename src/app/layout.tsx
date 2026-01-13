@@ -16,6 +16,38 @@ const geist = Geist({
 	variable: "--font-geist-sans",
 });
 
+const date = new Date();
+const year = date.getFullYear(); //4-digit year
+const month = date.getMonth(); //0-11
+const day = date.getDate(); //0-31
+const dayweek = date.getDay(); //0-6 = Sun-Sat
+
+const premapweek = [
+	new Date(year, month, day-6),
+	new Date(year, month, day-5),
+	new Date(year, month, day-4),
+	new Date(year, month, day-3),
+	new Date(year, month, day-2),
+	new Date(year, month, day-1),
+	new Date(year, month, day)
+];
+
+const dayofweeknames = [
+	"Sun",
+	"Mon",
+	"Tue",
+	"Wed",
+	"Thu",
+	"Fri",
+	"Sat"
+]
+
+const week = premapweek.map((date, index) => ({
+	id: index + 1,
+	day: date.getDate(),
+	dayofweek: dayofweeknames[date.getDay()]
+}));
+
 export default function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -30,15 +62,12 @@ export default function RootLayout({
 					</div>
 					<div className="navbar-center gap-[8px]">
 
-						<div className="btn btn-circle bg-base-100 list-item">
-							<div className="text-[8px]">Sun</div>
-							<div className="text-[18px]">11</div>
-						</div>
-
-						<div className="btn btn-circle bg-base-300 list-item">
-							<div className="text-[8px]">Mon</div>
-							<div className="text-[18px]">12</div>
-						</div>
+						{week.map((date) => (
+							<div key={date.id} className="btn btn-circle bg-base-100 list-item leading-[22px] text-[0px] h-[52px] w-[52px]">
+								<div className="text-[12px]">{date.dayofweek}</div>
+								<div className="text-[26px]">{date.day}</div>
+							</div>
+						))}
 
 					</div>
 					<div className="navbar-end">
