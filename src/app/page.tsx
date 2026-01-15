@@ -1,8 +1,17 @@
 import Link from "next/link";
+import { Suspense } from 'react'
+import ShownDate from "./shownDate"
 
-export default function HomePage() {
+function ShownDateFallback() {
+  return <>placeholder</>
+}
+
+export default function Page() {
 	return (
 		<main className="flex list-item px-[25%] pt-[12px]">
+			<Suspense fallback={<ShownDateFallback />}>
+          		<ShownDate />
+        	</Suspense>
 			<div className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
 				<div className="text-[24px]"><a className="italic font-bold">808penguinlover</a> thought...</div>
 				<div className="text-[16px] italic">What if I just be Grian and press this button?</div>

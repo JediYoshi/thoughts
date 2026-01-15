@@ -19,8 +19,8 @@ const geist = Geist({
 const date = new Date();
 const year = date.getFullYear(); //4-digit year
 const month = date.getMonth(); //0-11
-const day = date.getDate(); //0-31
-const dayweek = date.getDay(); //0-6 = Sun-Sat
+const day = date.getDate(); //1-31
+const dayofweek = date.getDay(); //0-6 = Sun-Sat
 
 const premapweek = [
 	new Date(year, month, day-6),
@@ -44,6 +44,8 @@ const dayofweeknames = [
 
 const week = premapweek.map((date, index) => ({
 	id: index + 1,
+	year: date.getFullYear(),
+	month: date.getMonth() + 1,
 	day: date.getDate(),
 	dayofweek: dayofweeknames[date.getDay()]
 }));
@@ -55,7 +57,7 @@ export default function RootLayout({
 		<html className={`${geist.variable}`} lang="en">
 			<body className="font-comfortaa w-full h-full overflow-hidden">
 
-				<div className="navbar bg-base-200 p-[4px] h-[64px] max-h-[64px] min-h-[64px] overflow-y-visible overflow-x-hidden">
+				<div className="navbar bg-base-200 p-[4px] h-[64px] max-h-[64px] min-h-[64px] overflow-hidden">
 					<div className="navbar-start ml-[4px] gap-[6px]">
 						<img src="/thought.png" className="h-[48px]" />
 						<div className="text-[32px]">Thoughts of the Day</div>
@@ -63,9 +65,12 @@ export default function RootLayout({
 					<div className="navbar-center gap-[8px]">
 
 						{week.map((date) => (
-							<div key={date.id} className="btn btn-circle bg-base-100 list-item leading-[22px] text-[0px] h-[52px] w-[52px]">
-								<div className="text-[12px]">{date.dayofweek}</div>
-								<div className="text-[26px]">{date.day}</div>
+							<div key={date.id} className="indicator">
+								<span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
+								<Link href={"./?year="+date.year+"&month="+date.month+"&day="+date.day}><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
+									<div className="text-[10px]">{date.dayofweek}</div>
+									<div className="text-[24px]">{date.day}</div>
+								</div></Link>
 							</div>
 						))}
 
