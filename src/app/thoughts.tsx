@@ -1,8 +1,22 @@
 'use client';
-
 import { useSearchParams } from 'next/navigation';
+import { db } from "~/server/db";
+import { thoughts } from "~/server/db/schema";
 
-export default async function ShownDate() {
+export default async function Posts() {
+    async function refreshPosts() {
+        return (
+            await db.query.thoughts.findMany({
+                columns: {
+                    username: true,
+                    thoughtType: true,
+                    thought: true
+                },
+            })
+        )
+    };
+    const data = await refreshPosts();
+
     const searchParams = useSearchParams();
     let year = 0;
     let month = 0;

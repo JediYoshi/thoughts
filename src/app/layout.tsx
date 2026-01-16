@@ -45,12 +45,13 @@ const dayofweeknames = [
 const week = premapweek.map((date, index) => ({
 	id: index + 1,
 	year: date.getFullYear(),
-	month: date.getMonth() + 1,
+	month: date.getMonth(),
 	day: date.getDate(),
-	dayofweek: dayofweeknames[date.getDay()]
+	dayofweek: dayofweeknames[date.getDay()],
+	url: (index == 6) ? "./" : "./?year="+date.getFullYear()+"&month="+date.getMonth()+"&day="+date.getDate()
 }));
 
-export default function RootLayout({
+export default function Layout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
@@ -64,10 +65,18 @@ export default function RootLayout({
 					</div>
 					<div className="navbar-center gap-[8px]">
 
+						<div className="indicator">
+							<span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
+							<Link href="./calander"><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
+								<div className="text-[10px]">View</div>
+								<div className="text-[24px]">&lt;-</div>
+							</div></Link>
+						</div>
+
 						{week.map((date) => (
 							<div key={date.id} className="indicator">
 								<span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
-								<Link href={"./?year="+date.year+"&month="+date.month+"&day="+date.day}><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
+								<Link href={date.url}><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
 									<div className="text-[10px]">{date.dayofweek}</div>
 									<div className="text-[24px]">{date.day}</div>
 								</div></Link>
@@ -76,9 +85,10 @@ export default function RootLayout({
 
 					</div>
 					<div className="navbar-end">
-						<div className="btn btn-secondary rounded-lg">
-							<div className="text-[24px]">+</div>
-							<div className="text-[18px]">Send a Public Thought</div>
+						<div className="lg:tooltip lg:tooltip-left lg:tooltip-secondary" data-tip="Send a Public Thought">
+							<div className="btn btn-secondary rounded-lg">
+								<div className="text-[24px]">+</div>
+							</div>
 						</div>
 					</div>
 				</div>
