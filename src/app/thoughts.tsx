@@ -1,5 +1,3 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
 import { db } from "~/server/db";
 import { thoughts } from "~/server/db/schema";
 
@@ -10,50 +8,30 @@ export default async function Posts() {
                 columns: {
                     username: true,
                     thoughtType: true,
-                    thought: true
+                    thought: true,
+                    createdAt: true
                 },
             })
-        )
+        ).reverse()
     };
     const data = await refreshPosts();
 
-    const searchParams = useSearchParams();
-    let year = 0;
-    let month = 0;
-    let day = 0;
-    if (searchParams.has('year') && searchParams.has('year') && searchParams.has('year')) {
-        year = parseInt(String(searchParams.get('year')));
-        month = parseInt(String(searchParams.get('month')));
-        day = parseInt(String(searchParams.get('day')));
-    } else {
-        const date = new Date();
-        year = date.getFullYear();
-        month = date.getMonth();
-        day = date.getDate()
+    const thoughtTypes = [
+        " thought...",
+        " wondered...",
+        "'s brain said..."
+    ];
+
+    function parseDate(date:Date) {
+        const standard = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()+date.getTimezoneOffset());
+        const userdate = new Date();
+        const datee = new Date(standard.getFullYear(), standard.getMonth(), standard.getDate(), standard.getHours(), standard.getMinutes()-userdate.getTimezoneOffset());
+        return (date.getHours())+":"+date.getMinutes()
     };
-    const date = new Date(year, month, day);
-    const dayofweeknames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-    ];
-    const monthnames = [
-        "January",
-        "Febuary",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
-    return <>Viewing Thoughts from {dayofweeknames[date.getDay()]}, {monthnames[month]} {day}, {year}</>
+
+    return <>{data.map((data, index) => (<div key={index} className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
+				<div className="text-[24px]"><a className="italic font-bold">{data.username}</a>{thoughtTypes[data.thoughtType]}</div>
+				<div className="text-[16px] italic">{data.thought}</div>
+				<div className="text-[10px] italic text-[#959595]">{parseDate(data.createdAt)}</div>
+			</div>))}</>
 }

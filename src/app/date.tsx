@@ -1,8 +1,7 @@
 'use client';
-
 import { useSearchParams } from 'next/navigation';
 
-export default async function ShownDate() {
+export default function ShownDate() {
     const searchParams = useSearchParams();
     let year = 0;
     let month = 0;

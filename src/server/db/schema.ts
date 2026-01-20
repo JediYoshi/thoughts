@@ -16,7 +16,7 @@ export const thoughts = createTable(
 	(d) => ({
 		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
 		username: d.varchar({ length: 64 }),
-		thoughtType: d.varchar({ length: 256 }),
+		thoughtType: d.integer().notNull().default(0),
 		thought: d.varchar({ length: 1024 }),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => /* @__PURE__ */ new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
