@@ -1,20 +1,60 @@
 import { db } from "~/server/db";
-import { thoughts } from "~/server/db/schema";
+import { posts } from "~/server/db/schema";
+import { and, gte, lte } from "drizzle-orm";
+import { unstable_noStore as noStore } from 'next/cache';
 
-export default async function Posts() {
+export default async function Posts({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
     async function refreshPosts() {
-        return (
-            await db.query.thoughts.findMany({
-                columns: {
-                    username: true,
-                    thoughtType: true,
-                    thought: true,
-                    createdAt: true
-                },
-            })
-        ).reverse()
+        noStore();
+        try {
+            return (
+                await db.query.posts.findMany({
+                    columns: {
+                        username: true,
+                        thoughtType: true,
+                        thought: true,
+                        createdAt: true
+                    },
+                })
+            ).reverse()
+        } catch (error) {
+            return []
+        }
     };
-    const data = await refreshPosts();
+    async function refreshPostsByDate(startDate: Date) {
+        noStore();
+        //const startDate = new Date(2026,0,20,  0,0,0,0);
+        const endDate = new Date(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()+1,  0,0,0,0);
+        try {
+            return (
+                await db.select().from(posts).where(and(
+                    gte(posts.createdAt, startDate),
+                    lte(posts.createdAt, endDate)
+                ))
+            ).reverse()
+        } catch (error) {
+            return []
+        }
+    };
+    //const data = await refreshPosts();
+    //const data = await refreshPostsByDate(new Date(2026,0,22,  0,0,0,0));
+    const params = searchParams ? await searchParams : {};
+    let year = 0;
+    let month = 0;
+    let day = 0;
+    console.log(params?.year);
+    console.log(params?.year && params?.month && params?.day);
+    if (params?.year && params?.month && params?.day) {
+        year = parseInt(String(params.year));
+        month = parseInt(String(params.month));
+        day = parseInt(String(params.day));
+    } else {
+        const date = new Date();
+        year = date.getFullYear();
+        month = date.getMonth();
+        day = date.getDate()
+    };
+    const data = await refreshPostsByDate(new Date (year,month,day,  0,0,0,0));
 
     const thoughtTypes = [
         " thought...",
@@ -26,12 +66,19 @@ export default async function Posts() {
         const standard = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()+date.getTimezoneOffset());
         const userdate = new Date();
         const datee = new Date(standard.getFullYear(), standard.getMonth(), standard.getDate(), standard.getHours(), standard.getMinutes()-userdate.getTimezoneOffset());
-        return (date.getHours())+":"+date.getMinutes()
+        let hour = String(datee.getHours());
+        let minute = String(datee.getMinutes());
+        if (parseInt(minute) < 10) {
+            minute = "0"+minute
+        };
+        return hour+":"+minute
     };
 
-    return <>{data.map((data, index) => (<div key={index} className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
-				<div className="text-[24px]"><a className="italic font-bold">{data.username}</a>{thoughtTypes[data.thoughtType]}</div>
-				<div className="text-[16px] italic">{data.thought}</div>
-				<div className="text-[10px] italic text-[#959595]">{parseDate(data.createdAt)}</div>
-			</div>))}</>
+    return <>{data.map((data: any, index: any) => (
+                <div key={index} className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
+                    <div className="text-[24px]"><a className="italic font-bold">{data.username}</a>{thoughtTypes[data.thoughtType]}</div>
+                    <div className="text-[16px] mx-[8px] italic">{data.thought}</div>
+                    <div className="text-[10px] italic text-[#959595]">{parseDate(data.createdAt)}</div>
+                </div>
+            ))}</>
 }

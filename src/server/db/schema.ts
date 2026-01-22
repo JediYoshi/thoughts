@@ -11,7 +11,7 @@ import { index, pgTableCreator } from "drizzle-orm/pg-core";
  */
 export const createTable = pgTableCreator((name) => `thoughts_${name}`);
 
-export const thoughts = createTable(
+export const posts = createTable(
 	"thoughts",
 	(d) => ({
 		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
