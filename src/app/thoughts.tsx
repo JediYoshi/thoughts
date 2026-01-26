@@ -4,23 +4,6 @@ import { and, gte, lte } from "drizzle-orm";
 import { unstable_noStore as noStore } from 'next/cache';
 
 export default async function Posts({ searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }) {
-    async function refreshPosts() {
-        noStore();
-        try {
-            return (
-                await db.query.posts.findMany({
-                    columns: {
-                        username: true,
-                        thoughtType: true,
-                        thought: true,
-                        createdAt: true
-                    },
-                })
-            ).reverse()
-        } catch (error) {
-            return []
-        }
-    };
     async function refreshPostsByDate(startDate: Date) {
         noStore();
         //const startDate = new Date(2026,0,20,  0,0,0,0);
@@ -36,14 +19,10 @@ export default async function Posts({ searchParams }: { searchParams?: { [key: s
             return []
         }
     };
-    //const data = await refreshPosts();
-    //const data = await refreshPostsByDate(new Date(2026,0,22,  0,0,0,0));
     const params = searchParams ? await searchParams : {};
     let year = 0;
     let month = 0;
     let day = 0;
-    console.log(params?.year);
-    console.log(params?.year && params?.month && params?.day);
     if (params?.year && params?.month && params?.day) {
         year = parseInt(String(params.year));
         month = parseInt(String(params.month));

@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import Link from "next/link";
+import { Suspense } from 'react';
+import DateBar from "./datebar";
 
 export const metadata: Metadata = {
 	title: "Thoughts of the Day",
@@ -16,40 +18,18 @@ const geist = Geist({
 	variable: "--font-geist-sans",
 });
 
-const date = new Date();
-const year = date.getFullYear(); //4-digit year
-const month = date.getMonth(); //0-11
-const day = date.getDate(); //1-31
-const dayofweek = date.getDay(); //0-6 = Sun-Sat
-
-const premapweek = [
-	new Date(year, month, day-6),
-	new Date(year, month, day-5),
-	new Date(year, month, day-4),
-	new Date(year, month, day-3),
-	new Date(year, month, day-2),
-	new Date(year, month, day-1),
-	new Date(year, month, day)
-];
-
-const dayofweeknames = [
-	"Sun",
-	"Mon",
-	"Tue",
-	"Wed",
-	"Thu",
-	"Fri",
-	"Sat"
-]
-
-const week = premapweek.map((date, index) => ({
-	id: index + 1,
-	year: date.getFullYear(),
-	month: date.getMonth(),
-	day: date.getDate(),
-	dayofweek: dayofweeknames[date.getDay()],
-	url: (index == 6) ? "./" : "./?year="+date.getFullYear()+"&month="+date.getMonth()+"&day="+date.getDate()
-}));
+function DateBarFallback() {
+	return <>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+		<div className="skeleton h-[48px] w-[48px] shrink-0 rounded-full"></div>
+	</>
+};
 
 export default function Layout({
 	children,
@@ -60,28 +40,15 @@ export default function Layout({
 
 				<div className="navbar bg-base-200 p-[4px] h-[64px] max-h-[64px] min-h-[64px] overflow-hidden">
 					<div className="navbar-start ml-[4px] gap-[6px]">
-						<img src="/thought.png" className="h-[48px]" />
-						<div className="text-[32px]">Thoughts of the Day</div>
+						<Link href="./"><div className="lg:tooltip lg:tooltip-right lg:tooltip-primary" data-tip="Thoughts of the Day">
+							<img src="/thought.png" className="h-[48px]" /></div>
+						</Link>
 					</div>
 					<div className="navbar-center gap-[8px]">
 
-						<div className="indicator">
-							<span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
-							<Link href="./calander"><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
-								<div className="text-[10px]">View</div>
-								<div className="text-[24px]">&lt;-</div>
-							</div></Link>
-						</div>
-
-						{week.map((date) => (
-							<div key={date.id} className="indicator">
-								<span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
-								<Link href={date.url}><div className="btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]">
-									<div className="text-[10px]">{date.dayofweek}</div>
-									<div className="text-[24px]">{date.day}</div>
-								</div></Link>
-							</div>
-						))}
+						<Suspense fallback={<DateBarFallback />}>
+							<DateBar />
+						</Suspense>
 
 					</div>
 					<div className="navbar-end">
