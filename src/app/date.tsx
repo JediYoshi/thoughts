@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import PostCount from "./thoughtcount";
 
 export default function ShownDate() {
     const searchParams = useSearchParams();
@@ -47,7 +46,7 @@ export default function ShownDate() {
     const nextdate = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1);
     return <>
                 <Link href={`./?year=${prevdate.getFullYear()}&month=${prevdate.getMonth()}&day=${prevdate.getDate()}`}><div className="btn btn-xs bg-base-300">&lt;</div></Link>
-                <div className="mx-[8px]">[Viewing 0? Thoughts from {dayofweeknames[date.getDay()]}, {monthnames[month]} {day}, {year}]</div>
+                <div className="mx-[8px]">[Viewing Thoughts from {dayofweeknames[date.getDay()]}, {monthnames[month]} {day}, {year}]</div>
                 <Link href={`./?year=${nextdate.getFullYear()}&month=${nextdate.getMonth()}&day=${nextdate.getDate()}`}><div className="btn btn-xs bg-base-300">&gt;</div></Link>
             </>
 }

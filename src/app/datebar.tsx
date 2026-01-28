@@ -58,7 +58,7 @@ export default function DateBar() {
     return <>
                 <div className="indicator">
                     <span className="indicator-item indicator-center badge badge-primary badge-xs invisible">0</span>
-                    <Link href="./calander"><div className={(pathname=="/calander") ? `btn btn-circle bg-base-300 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]` : `btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]`}>
+                    <Link href="./calender"><div className={(pathname=="/calender") ? `btn btn-circle bg-base-300 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]` : `btn btn-circle bg-base-100 list-item pt-[4px] leading-[18px] text-[0px] h-[48px] w-[48px]`}>
                         <div className="text-[10px]">View</div>
                         <div className="text-[24px]">&lt;-</div>
                     </div></Link>

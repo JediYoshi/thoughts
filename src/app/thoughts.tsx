@@ -1,3 +1,5 @@
+'use server';
+
 import { db } from "~/server/db";
 import { posts } from "~/server/db/schema";
 import { and, gte, lte } from "drizzle-orm";
@@ -53,11 +55,14 @@ export default async function Posts({ searchParams }: { searchParams?: { [key: s
         return hour+":"+minute
     };
 
-    return <>{data.map((data: any, index: any) => (
-                <div key={index} className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
-                    <div className="text-[24px]"><a className="italic font-bold">{data.username}</a>{thoughtTypes[data.thoughtType]}</div>
-                    <div className="text-[16px] mx-[8px] italic">{data.thought}</div>
-                    <div className="text-[10px] italic text-[#959595]">{parseDate(data.createdAt)}</div>
-                </div>
-            ))}</>
+    return <>
+                <div className="flex w-full justify-center text-[12px] text-[#666666]">Loaded {data.length} Thoughts</div>
+                {data.map((data: any, index: any) => (
+                    <div key={index} className="w-full min-w-full card bg-base-300 border border-[#747474] shadow-xl my-[8px] p-[8px] gap-[8px]">
+                        <div className="text-[24px]"><a className="italic font-bold">{data.username}</a>{thoughtTypes[data.thoughtType]}</div>
+                        <div className="text-[16px] mx-[8px] italic">{data.thought}</div>
+                        <div className="text-[10px] italic text-[#959595]">{parseDate(data.createdAt)}</div>
+                    </div>
+                ))}
+            </>
 }
