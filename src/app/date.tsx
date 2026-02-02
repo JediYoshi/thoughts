@@ -30,7 +30,7 @@ export default function ShownDate() {
     ];
     const monthnames = [
         "January",
-        "Febuary",
+        "February",
         "March",
         "April",
         "May",

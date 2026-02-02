@@ -1,5 +1,6 @@
 import Calender from "./calender"
 import { Suspense } from 'react';
+import Month from "./date"
 
 function CalenderFallback() {
 	return <>
@@ -13,10 +14,16 @@ function CalenderFallback() {
 	</>
 };
 
-export default function Page({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
+export default async function Page({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
+	const params = searchParams ? await searchParams : {};
     return (
         <main className="flex flex-wrap w-full justify-center my-[12px] gap-[6px]">
-            <Suspense fallback={<CalenderFallback />}>
+			<div className="flex w-full justify-center gap-[12px]">
+				<Suspense>
+					<Month />
+				</Suspense>
+			</div>
+			<Suspense fallback={<CalenderFallback />}>
                 <Calender />
             </Suspense>
         </main>
