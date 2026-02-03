@@ -52,11 +52,11 @@ export default function Layout({
 
 					</div>
 					<div className="navbar-end">
-						<div className="lg:tooltip lg:tooltip-left lg:tooltip-secondary" data-tip="Send a Public Thought">
+						<Link href="./send"><div className="lg:tooltip lg:tooltip-left lg:tooltip-secondary" data-tip="Send a Public Thought">
 							<div className="btn btn-secondary rounded-lg">
 								<div className="text-[24px]">+</div>
 							</div>
-						</div>
+						</div></Link>
 					</div>
 				</div>
 
